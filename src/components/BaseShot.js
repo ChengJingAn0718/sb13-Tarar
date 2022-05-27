@@ -6,8 +6,6 @@ import loadSound from "../utils/loadSound"
 import { prePathUrl } from "./CommonFunctions";
 import { LoadingCircleBar } from "./CommonButtons"
 
-var oldBackgroundImage = 'SB_37_Stage_BG_2';
-var _isBackSoundPlaying = true;
 
 const animationColorList = [
     ['#51c9b5', '#cc55d9', '#f55185'],
@@ -41,11 +39,11 @@ let commonAudio3 = new loadSound('common/common3');
 let subAudioList = []
 
 
-Array.from(Array(10).keys()).map(value => {
+Array.from(Array(16).keys()).map(value => {
     subAudioList.push(new loadSound('word/' + (value + 1)))
 })
 
-backAudio.volume = 0.15;
+backAudio.volume = 0.08;
 
 wooAudio.volume = 0.8;
 successAudio.volume = 0.4;

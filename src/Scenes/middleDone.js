@@ -34,8 +34,8 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc }, ref) => {
                 audioList.bodyAudio1.play().catch(error => { });
                 timerList[1] = setTimeout(() => {
                     nextFunc();
-                }, audioList.bodyAudio1.duration * 1000 + 2000);
-            }, 2000);
+                }, audioList.bodyAudio1.duration * 1000 + 2500);
+            }, 2500);
         },
 
         sceneEnd: () => {

@@ -123,6 +123,8 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
         audioList.bodyAudio1.pause()
         audioList.bodyAudio2.pause()
 
+        audioList.buzzAudio.pause();
+
 
         timerList.map(timer => clearTimeout(timer))
 
@@ -258,12 +260,16 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
             clickRefList[num].current.style.top = '47%'
 
             correctNum++
+
+            audioList.tingAudio.currentTime = 0;
             audioList.tingAudio.play();
 
-            console.log(answerList)
 
             if (correctNum == answerList.length) {
-                goNextStep()
+                setTimeout(() => {
+                    goNextStep()
+                }, 1000);
+
             }
 
             else {
