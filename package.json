@@ -26,7 +26,8 @@
     "react-lottie-player": "^1.4.1",
     "react-lottie-segments": "^1.4.9",
     "react-scripts": "4.0.0",
-    "react-touch-position": "^2.0.2"
+    "react-touch-position": "^2.0.2",
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@babel/runtime": "7.13.8",
