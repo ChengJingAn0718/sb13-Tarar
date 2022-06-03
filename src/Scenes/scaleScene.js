@@ -62,8 +62,8 @@ const audioPathList = [
     ['12'],
 ]
 
-let currentMaskNum = 0;
-let subMaskNum = 0;
+let currentMaskNum =  0;
+let subMaskNum =  0;
 
 const subMarkInfoList = [
 
