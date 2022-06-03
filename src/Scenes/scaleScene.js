@@ -58,8 +58,8 @@ const audioPathList = [
     ['7'],
     ['8'],
     ['9'],
-    ['10'],
-    ['11'],
+    ['10','11'],
+    ['12'],
 ]
 
 let currentMaskNum = 0;
