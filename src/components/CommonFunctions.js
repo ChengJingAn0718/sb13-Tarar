@@ -8,11 +8,12 @@ var environIntervalList = []
 
 export function initialAudio(audioList) {
     let allkeys = Object.keys(audioList)
+    console.log(allkeys)
+    
     for (let i = 0; i < allkeys.length; i++) {
         audioList[allkeys[i]].play().catch(error => { })
             .catch(error => {
             })
-        setExtraVolume(audioList[allkeys[i]], 2)
         audioList[allkeys[i]].pause()
     }
 }

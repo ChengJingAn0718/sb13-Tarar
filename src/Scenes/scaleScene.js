@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useContext, useState } from 'react';
 import "../stylesheets/styles.css";
 import BaseImage from '../components/BaseImage';
 import { UserContext } from '../components/BaseShot';
-import { getAudioPath, prePathUrl } from "../components/CommonFunctions";
+import { getAudioPath, prePathUrl, setExtraVolume } from "../components/CommonFunctions";
 import { MaskComponent } from "../components/CommonComponents"
 
 
@@ -58,12 +58,12 @@ const audioPathList = [
     ['7'],
     ['8'],
     ['9'],
-    ['10','11'],
+    ['10', '11'],
     ['12'],
 ]
 
-let currentMaskNum =  0;
-let subMaskNum =  0;
+let currentMaskNum = 0;
+let subMaskNum = 0;
 
 const subMarkInfoList = [
 
@@ -124,6 +124,15 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
             setTimeout(() => {
                 setSubMaskLoaded(true)
             }, 2000);
+
+            setTimeout(() => {
+                
+                setExtraVolume(audioList.bodyAudio1, 2)
+                setExtraVolume(audioList.bodyAudio2, 2)
+                setExtraVolume(audioList.bodyAudio3, 2)
+
+            }, 2500);
+
 
             setTimeout(() => {
                 audioList.bodyAudio2.play()
