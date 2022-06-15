@@ -7,7 +7,7 @@ import { MaskComponent } from "../components/CommonComponents"
 
 
 const maskPathList = [
-    ['1'],
+    ['sub'],
     ['2'],
     ['sub'],
     ['sub'],
@@ -21,7 +21,7 @@ const maskPathList = [
 
 
 const maskTransformList = [
-    { x: 0.4, y: 0.7, s: 2.4 },
+    { x: 0.15, y: 0.15, s: 1.3 },
     { x: 0.5, y: -0.4, s: 2 },
     { x: 0.3, y: -0.5, s: 2 },
     { x: 0.1, y: -0.2, s: 2 },
@@ -66,6 +66,11 @@ let currentMaskNum = 0;
 let subMaskNum = 0;
 
 const subMarkInfoList = [
+    [
+        
+        { p: '14', t: 1000, ps: 0, pl: 0.0, pt: 0 },
+        { p: '1', t: 4500, ps: 2, pl: 0.4, pt: 0.4 },
+    ],
 
     [
         { p: '3', t: 2000, ps: 2, pl: 0.4, pt: -0.4 },
@@ -126,13 +131,12 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
             }, 2000);
 
             setTimeout(() => {
-                
+
                 setExtraVolume(audioList.bodyAudio1, 2.5)
                 setExtraVolume(audioList.bodyAudio2, 2.5)
                 setExtraVolume(audioList.bodyAudio3, 2.5)
 
             }, 2500);
-
 
             setTimeout(() => {
                 audioList.bodyAudio2.play()
@@ -187,7 +191,12 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
                     setTimeout(() => {
                         if (index == 0)
                             colorObject.current.className = 'hide'
+
+                        if (index == 1 && subMaskNum == 0)
+                            subMaskRefList[index - 1].current.setClass('hide')
+
                         subMaskRefList[index].current.setClass('appear')
+
                         if (value.ps != null) {
                             subMaskRefList[index].current.setStyle({
                                 transform:
