@@ -26,21 +26,43 @@ let tingAudio = new loadSound('ting', true);
 let wooAudio = new loadSound('woo', true);
 let replayAudio = new loadSound('replayAudio', true);
 let successAudio = new loadSound('success', true);
-
+let excellentAudio = new loadSound('excellent', true);
 
 let bodyAudio1 = new loadSound('intro/2');
 let bodyAudio2 = new loadSound('intro/2');
 let bodyAudio3 = new loadSound('intro/2');
+let bodyAudio4 = new loadSound('intro/2');
 
 let commonAudio1 = new loadSound('common/common1');
 let commonAudio2 = new loadSound('common/common2');
 let commonAudio3 = new loadSound('common/common3');
 
-let subAudioList = []
+let middleAudio = new loadSound('common/middle');
+let reviewAudio = new loadSound('common/review0');
 
+let subAudioList = []
 
 Array.from(Array(16).keys()).map(value => {
     subAudioList.push(new loadSound('word/' + (value + 1)))
+})
+
+Array.from(Array(8).keys()).map(index => {
+    Array.from(Array(2).keys()).map(subIndex => {
+        subAudioList.push(new loadSound('question/' + (index + 1) + "/" + (subIndex + 1)))
+    })
+})
+
+export const optionList = [
+    3, 5
+]
+
+optionList.map((leng, index) => {
+    Array.from(Array(leng).keys()).map(subIndex => {
+        if (subIndex == 0)
+            subAudioList.push(new loadSound('option/' + (index + 1) + "/q"))
+        else
+            subAudioList.push(new loadSound('option/' + (index + 1) + "/" + (subIndex)))
+    })
 })
 
 backAudio.volume = 0.04;
@@ -70,10 +92,15 @@ let audioList = {
     bodyAudio1,
     bodyAudio2,
     bodyAudio3,
+    bodyAudio4,
 
     commonAudio1,
     commonAudio2,
     commonAudio3,
+
+    excellentAudio,
+    middleAudio,
+    reviewAudio,
 
     successAudio,
     ...subAudioList
@@ -87,7 +114,7 @@ let isGameLoaded = false;
 const UserContext = createContext();
 
 //remove colsoles
-// console.log = function () { }
+console.log = function () { }
 
 export default function BaseShot() {
 

@@ -8,11 +8,11 @@ import { MaskComponent } from "../components/CommonComponents"
 
 const maskPathList = [
     ['sub'],
-    ['2'],
+    ['2'], //1
     ['sub'],
     ['sub'],
     ['sub'],
-    ['9'],
+    ['9'],  // 5
     ['10'],
     ['sub'],
     ['sub'],
@@ -65,9 +65,13 @@ const audioPathList = [
 let currentMaskNum = 0;
 let subMaskNum = 0;
 
+let isSubEven = true;
+let isEven = true
+let isAudioEven = true;
+
 const subMarkInfoList = [
     [
-        
+
         { p: '14', t: 1000, ps: 0, pl: 0.0, pt: 0 },
         { p: '1', t: 4500, ps: 2, pl: 0.4, pt: 0.4 },
     ],
@@ -98,14 +102,21 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
 
     const audioList = useContext(UserContext)
 
+    const blackWhiteObjects = [useRef(), useRef()];
+    const currentImages = [useRef(), useRef()]
+
     const baseObject = useRef();
-    const blackWhiteObject = useRef();
     const colorObject = useRef();
-    const currentImage = useRef()
-    const subMaskRefList = Array.from({ length: 2 }, ref => useRef())
+
+    const subMaskRefLists = [Array.from({ length: 2 }, ref => useRef()), Array.from({ length: 2 }, ref => useRef())]
 
     const [isSubMaskLoaded, setSubMaskLoaded] = useState(false)
     const [isSceneLoad, setSceneLoad] = useState(false)
+
+    const bodyAudios = [
+        audioList.bodyAudio1,
+        audioList.bodyAudio4
+    ]
 
     React.useImperativeHandle(ref, () => ({
         sceneLoad: () => {
@@ -118,36 +129,40 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
             baseObject.current.className = 'aniObject'
 
             audioList.bodyAudio1.src = getAudioPath('intro/2');
+            audioList.bodyAudio4.src = getAudioPath('intro/3');
             audioList.bodyAudio2.src = getAudioPath('intro/1');
+            audioList.bodyAudio3.src = getAudioPath('intro/11');
 
-            blackWhiteObject.current.style.WebkitMaskImage = 'url("' +
-                returnImgPath(maskPathList[currentMaskNum][0], true) + '")'
+            blackWhiteObjects[0].current.style.WebkitMaskImage = 'url("' +
+                returnImgPath(maskPathList[1][0], true) + '")'
 
-            blackWhiteObject.current.style.transition = "0.5s"
-            currentImage.current.style.transition = '0.5s'
+            blackWhiteObjects[1].current.style.WebkitMaskImage = 'url("' +
+                returnImgPath(maskPathList[5][0], true) + '")'
 
+            
             setTimeout(() => {
-                setSubMaskLoaded(true)
-            }, 2000);
-
-            setTimeout(() => {
-
-                setExtraVolume(audioList.bodyAudio1, 2.5)
-                setExtraVolume(audioList.bodyAudio2, 2.5)
-                setExtraVolume(audioList.bodyAudio3, 2.5)
-
+                setExtraVolume(audioList.bodyAudio2, 3)
             }, 2500);
 
             setTimeout(() => {
                 audioList.bodyAudio2.play()
                 setTimeout(() => {
+
+                    setExtraVolume(audioList.bodyAudio1, 3)
+                    setExtraVolume(audioList.bodyAudio3, 3)
+                    setExtraVolume(audioList.bodyAudio4, 3)
+
                     showIndividualImage()
+                    setSubMaskLoaded(true)
                 }, audioList.bodyAudio2.duration * 1000 + 1000);
             }, 3000);
         },
         sceneEnd: () => {
             currentMaskNum = 0;
             subMaskNum = 0;
+            isSubEven = true;
+            isEven = true;
+            isAudioEven = true;
 
             setSceneLoad(false)
         }
@@ -162,8 +177,11 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
         2, 1, 1, 1.4, 1.4, 1.4, 1, 1, 1, 1.4, 1.4, 1.4, 1
     ]
     function showIndividualImage() {
-        blackWhiteObject.current.className = 'hideObject'
-        let currentMaskName = maskPathList[currentMaskNum]
+        let cIndex = isEven ? 0 : 1  //current
+        let sIndex = isSubEven ? 0 : 1;  //sub
+        let aIndex = isAudioEven ? 0 : 1; //audio
+
+        let currentMaskName = maskPathList[currentMaskNum][0]
 
         baseObject.current.style.transition = durationList[currentMaskNum] + 's'
 
@@ -173,7 +191,7 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
             'scale(' + maskTransformList[currentMaskNum].s + ') '
 
         setTimeout(() => {
-            let timeDuration = audioList.bodyAudio1.duration * 1000 + 500
+            let timeDuration = bodyAudios[aIndex].duration * 1000 + 500
             let isSubAudio = false
 
             if (audioPathList[currentMaskNum].length > 1) {
@@ -182,7 +200,7 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
             }
 
             if (currentMaskName != 'sub') {
-                blackWhiteObject.current.className = 'show'
+                blackWhiteObjects[cIndex].current.className = 'show'
                 colorObject.current.className = 'hide'
             }
 
@@ -193,12 +211,12 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
                             colorObject.current.className = 'hide'
 
                         if (index == 1 && subMaskNum == 0)
-                            subMaskRefList[index - 1].current.setClass('hide')
+                            subMaskRefLists[sIndex][index - 1].current.setClass('hide')
 
-                        subMaskRefList[index].current.setClass('appear')
+                        subMaskRefLists[sIndex][index].current.setClass('appear')
 
                         if (value.ps != null) {
-                            subMaskRefList[index].current.setStyle({
+                            subMaskRefLists[sIndex][index].current.setStyle({
                                 transform:
                                     "translate(" + _baseGeo.width * value.pl / 100 + "px,"
                                     + _baseGeo.height * value.pt / 100 + "px)"
@@ -214,12 +232,10 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
                 maskPathList[currentMaskNum].map((value, index) => {
                     setTimeout(() => {
                         if (index > 0) {
-                            blackWhiteObject.current.style.WebkitMaskImage = 'url("' +
+                            blackWhiteObjects[cIndex].current.style.WebkitMaskImage = 'url("' +
                                 returnImgPath(maskPathList[currentMaskNum][index], true) + '")'
                         }
-
-
-                    }, (audioList.bodyAudio1.duration * 1000 + 1000) / maskPathList[currentMaskNum].length * index);
+                    }, (bodyAudios[cIndex].duration * 1000 + 1000) / maskPathList[currentMaskNum].length * index);
                 }
                 )
             }
@@ -227,33 +243,31 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
             setTimeout(() => {
 
                 if (marginPosList[currentMaskNum].s != null) {
-                    currentImage.current.style.transform =
+                    currentImages[cIndex].current.style.transform =
                         "translate(" + _baseGeo.width * marginPosList[currentMaskNum].l / 100 + "px,"
                         + _baseGeo.height * marginPosList[currentMaskNum].t / 100 + "px)"
                         + "scale(" + (1 + marginPosList[currentMaskNum].s / 100) + ") "
                 }
 
 
-                audioList.bodyAudio1.play().catch(error => { });
+                bodyAudios[aIndex].play().catch(error => { });
+
                 if (isSubAudio)
                     setTimeout(() => {
-
                         setTimeout(() => {
                             audioList.bodyAudio3.play();
                         }, 500);
-                    }, audioList.bodyAudio1.duration * 1000 + 500);
+                    }, bodyAudios[aIndex].duration * 1000 + 500);
 
                 setTimeout(() => {
-                    if (currentMaskNum < audioPathList.length - 1) {
-                        audioList.bodyAudio1.src = getAudioPath('intro/' + audioPathList[currentMaskNum + 1][0]);
-                        if (audioPathList[currentMaskNum + 1].length > 1)
-                            audioList.bodyAudio3.src = getAudioPath('intro/' + audioPathList[currentMaskNum + 1][1]);
+                    if (currentMaskNum < audioPathList.length - 2) {
+                        bodyAudios[aIndex].src = getAudioPath('intro/' + audioPathList[currentMaskNum + 2][0]);
                     }
 
                     setTimeout(() => {
-                        currentImage.current.style.transform = "scale(1)"
+                        currentImages[cIndex].current.style.transform = "scale(1)"
                         if (currentMaskName == 'sub') {
-                            subMaskRefList.map(mask => {
+                            subMaskRefLists[sIndex].map(mask => {
                                 if (mask.current) {
                                     mask.current.setStyle({
                                         transform: "scale(1)"
@@ -283,29 +297,46 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
                             }
                             else {
                                 if (currentMaskName == 'sub') {
-                                    subMaskRefList.map(mask => {
+                                    subMaskRefLists[sIndex].map(mask => {
                                         if (mask.current) {
-
                                             setTimeout(() => {
                                                 mask.current.setClass('hide')
                                             }, 500);
                                         }
                                     })
                                     subMaskNum++
-                                }
+                                    isSubEven = !isSubEven
 
-                                currentMaskNum++;
 
-                                currentMaskName = maskPathList[currentMaskNum]
-                                if (currentMaskName != 'sub')
-                                    blackWhiteObject.current.style.WebkitMaskImage = 'url("' +
-                                        returnImgPath(maskPathList[currentMaskNum], true) + '")'
-                                else
-                                    subMarkInfoList[subMaskNum].map((value, index) => {
-                                        subMaskRefList[index].current.setMask(returnImgPath(value.p, true))
+                                    if(subMaskNum < subMarkInfoList.length - 1)
+                                    subMarkInfoList[subMaskNum + 1].map((value, index) => {
+                                        subMaskRefLists[sIndex][index].current.setMask(returnImgPath(value.p, true))
                                     })
 
-                                blackWhiteObject.current.className = 'hide'
+                                }
+
+                                else {
+                                    isEven = !isEven
+                                    let subCount = 0
+                                    for (let i = currentMaskNum + 1; i < maskPathList.length; i++) {
+
+                                        if (maskPathList[i][0] != 'sub')
+                                            subCount++
+
+                                        if (subCount == 2) {
+                                            blackWhiteObjects[cIndex].current.style.WebkitMaskImage = 'url("' +
+                                                returnImgPath(maskPathList[i][0], true) + '")'
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                isAudioEven = !isAudioEven
+                                currentMaskNum++;
+
+                                blackWhiteObjects[cIndex].current.className = 'hide'
+
                                 setTimeout(() => {
                                     showIndividualImage()
                                 }, 2000);
@@ -351,52 +382,62 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
                         />
                     </div>
 
-                    <div
-                        ref={blackWhiteObject}
-                        style={{
-                            position: "absolute", width: '100%'
-                            , height: '100%',
-                            left: '0%',
-                            top: '0%',
-                            WebkitMaskImage: 'url("' +
-                                returnImgPath(maskPathList[2][0], true)
-                                + '")',
-                            WebkitMaskSize: '100% 100%',
-                            WebkitMaskRepeat: "no-repeat"
-                        }} >
+                    {
+                        blackWhiteObjects.map(
+                            (blackWhiteObject, index) =>
+                                <div
+                                    ref={blackWhiteObject}
+                                    className={
+                                        'hideObject'
+                                    }
+                                    style={{
+                                        position: "absolute", width: '100%'
+                                        , height: '100%',
+                                        left: '0%',
+                                        top: '0%',
+                                        transition: '0.5s',
+                                        WebkitMaskImage: 'url("' +
+                                            returnImgPath(['2', '9'][index], true)
+                                            + '")',
+                                        WebkitMaskSize: '100% 100%',
+                                        WebkitMaskRepeat: "no-repeat"
+                                    }} >
 
-                        <div
-                            ref={currentImage}
-                            style={{
-                                position: 'absolute',
-                                left: '0%',
-                                top: '0%',
-                                width: '100%',
-                                height: '100%',
-                            }}
-                        >
-                            <BaseImage
-                                url={'bg/base.png'}
-                            />
+                                    <div
+                                        ref={currentImages[index]}
+                                        style={{
+                                            position: 'absolute',
+                                            left: '0%',
+                                            top: '0%',
+                                            width: '100%',
+                                            height: '100%',
+                                            transition: '0.5s'
+                                        }}
+                                    >
+                                        <BaseImage
+                                            url={'bg/base.png'}
+                                        />
 
-                            {/* {
-                        outLineRefList.map(
-                            (value, index) =>
-                                <BaseImage
-                                    className='hideObject'
-                                    ref={outLineRefList[index]}
-                                />
+                                    </div>
+                                </div>
                         )
+                    }
 
-                    } */}
-
-                        </div>
-                    </div>
 
                     {
-                        isSubMaskLoaded && subMarkInfoList[0].map((value, index) =>
+                        subMarkInfoList[0].map((value, index) =>
                             <MaskComponent
-                                ref={subMaskRefList[index]}
+                                ref={subMaskRefLists[0][index]}
+                                maskPath={returnImgPath(value.p, true)}
+                            />
+
+                        )
+                    }
+
+                    {
+                        isSubMaskLoaded && subMarkInfoList[1].map((value, index) =>
+                            <MaskComponent
+                                ref={subMaskRefLists[1][index]}
                                 maskPath={returnImgPath(value.p, true)}
                             />
 

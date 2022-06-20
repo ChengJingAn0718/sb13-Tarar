@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useContext, useState } from 'react';
 import "../../stylesheets/styles.css";
 import BaseImage from '../../components/BaseImage';
 import { UserContext } from '../../components/BaseShot';
-import { getAudioPath, prePathUrl, setPrimaryAudio, setRepeatAudio, setRepeatType, startRepeatAudio, stopRepeatAudio } from "../../components/CommonFunctions";
+import { getAudioPath, prePathUrl, setExtraVolume, setPrimaryAudio, setRepeatAudio, setRepeatType, startRepeatAudio, stopRepeatAudio } from "../../components/CommonFunctions";
 
 import { SIGNALLIST } from "../../components/CommonVarariant"
 
@@ -43,6 +43,10 @@ let disableState = false;
 
 let isFirstPartShow = false;
 
+const osIndex = 32
+
+let qAudio, aAudio
+
 const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueSecondPart }, ref) => {
 
     const optionLength = posInfoList.length
@@ -69,48 +73,46 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
 
     React.useImperativeHandle(ref, () => ({
         continueGame: () => {
-            //continue games...
+            qAudio = audioList[osIndex + stepCount + doneCount]
+            aAudio = audioList[osIndex + stepCount + doneCount + 1]
 
-            audioList.bodyAudio1.src = getAudioPath('option/' + (stepCount + 1) + '/q')
-            audioList.bodyAudio2.src = getAudioPath('option/' + (stepCount + 1) + '/1')
-
-            setPrimaryAudio(audioList.bodyAudio2)
+            setPrimaryAudio(qAudio)
             setRepeatAudio(audioList.commonAudio1)
-
-
 
             parentObject.current.className = 'appear'
             parentObject.current.style.pointerEvents = ''
             timerList[0] = setTimeout(() => {
-                audioList.bodyAudio1.play();
+                qAudio.play();
                 timerList[1] = setTimeout(() => {
-                    audioList.bodyAudio2.play();
+                    aAudio.play();
                     timerList[2] = setTimeout(() => {
                         startRepeatAudio()
-                        // audioList.commonAudio1.play();
-                    }, audioList.bodyAudio2.duration * 1000 + 300);
-                }, audioList.bodyAudio1.duration * 1000 + 300);
+                        audioList.commonAudio1.play();
+                    }, aAudio.duration * 1000 + 300);
+                }, qAudio.duration * 1000 + 300);
             }, 1500);
         },
         startGame: () => {
 
-            audioList.bodyAudio1.src = getAudioPath('option/' + (stepCount + 1) + '/q')
-            audioList.bodyAudio2.src = getAudioPath('option/' + (stepCount + 1) + '/1')
+            for (let i = 0; i < optionList.reduce((a, b) => a + b); i++)
+                setExtraVolume(audioList[osIndex + i], 4)
 
+            qAudio = audioList[osIndex]
+            aAudio = audioList[osIndex + 1]
 
-            setPrimaryAudio(audioList.bodyAudio2)
+            setPrimaryAudio(qAudio)
             setRepeatAudio(audioList.commonAudio1)
             setRepeatType(1)
 
             timerList[0] = setTimeout(() => {
-                audioList.bodyAudio1.play();
+                qAudio.play();
                 timerList[1] = setTimeout(() => {
-                    audioList.bodyAudio2.play();
+                    aAudio.play();
                     timerList[2] = setTimeout(() => {
                         startRepeatAudio()
                         audioList.commonAudio1.play();
-                    }, audioList.bodyAudio2.duration * 1000 + 300);
-                }, audioList.bodyAudio1.duration * 1000 + 600);
+                    }, aAudio.duration * 1000 + 300);
+                }, qAudio.duration * 1000 + 600);
             }, 1500);
         }
     }))
@@ -120,11 +122,10 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
     const clickFunc = (num) => {
         stopRepeatAudio();
 
-        audioList.bodyAudio1.pause()
-        audioList.bodyAudio2.pause()
+        qAudio.pause()
+        aAudio.pause()
 
         audioList.buzzAudio.pause();
-
 
         timerList.map(timer => clearTimeout(timer))
 
@@ -156,8 +157,6 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
         transSignaler(SIGNALLIST.increaseMark)
 
         setTimeout(() => {
-
-
             if (stepCount < optionGroup.length - 1) {
 
                 correctNum = 0;
@@ -173,8 +172,6 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
                     }, 2000);
                 }
                 else {
-                    audioList.bodyAudio1.src = getAudioPath('option/' + (stepCount + 1) + '/q')
-                    audioList.bodyAudio2.src = getAudioPath('option/' + (stepCount + 1) + '/1')
                     disableState = false
                     parentObject.current.className = 'disapear'
                 }
@@ -209,15 +206,18 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
                     if (!disableState) {
                         parentObject.current.className = 'appear'
                         parentObject.current.style.pointerEvents = ''
+
+                        qAudio = audioList[osIndex + doneCount + stepCount]
+                        aAudio = audioList[osIndex + doneCount + stepCount + 1]
+
                         timerList[0] = setTimeout(() => {
-                            audioList.bodyAudio1.play();
+                            qAudio.play();
                             timerList[1] = setTimeout(() => {
-                                audioList.bodyAudio2.play();
+                                aAudio.play();
                                 timerList[2] = setTimeout(() => {
                                     startRepeatAudio()
-                                    // audioList.commonAudio1.play();
-                                }, audioList.bodyAudio2.duration * 1000 + 300);
-                            }, audioList.bodyAudio1.duration * 1000 + 300);
+                                }, aAudio.duration * 1000 + 300);
+                            }, qAudio.duration * 1000 + 300);
                         }, 1500);
                     }
                 }, waitTime);
@@ -288,20 +288,18 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
             }
 
             else {
-                audioList.bodyAudio2.src = getAudioPath('option/' + (stepCount + 1) + '/' + (correctNum + 1))
 
                 transSignaler(SIGNALLIST.loadSecondPart)  // loadSecond part...
+                aAudio = audioList[osIndex + doneCount + stepCount + 1 + correctNum]
 
                 timerList[0] = setTimeout(() => {
                     itemRefList[doneCount + correctNum].current.className = 'appear'
                     parentObject.current.style.pointerEvents = ''
-
-                    audioList.bodyAudio2.currentTime = 0;
-                    audioList.bodyAudio2.play();
+                    aAudio.play()
                     timerList[2] = setTimeout(() => {
+                        setPrimaryAudio(aAudio)
                         startRepeatAudio()
-                        // audioList.commonAudio1.play();
-                    }, audioList.bodyAudio2.duration * 1000 + 300);
+                    }, aAudio.duration * 1000 + 300);
                 }, 1500);
             }
         }
@@ -310,11 +308,11 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
             audioList.buzzAudio.play();
 
             timerList[1] = setTimeout(() => {
-                audioList.bodyAudio2.currentTime = 0;
-                audioList.bodyAudio2.play();
+                aAudio.currentTime = 0;
+                aAudio.play();
                 timerList[2] = setTimeout(() => {
                     startRepeatAudio()
-                }, audioList.bodyAudio2.duration * 1000);
+                }, aAudio.duration * 1000);
             }, 1000);
         }
     }
