@@ -121,6 +121,7 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
     React.useImperativeHandle(ref, () => ({
         sceneLoad: () => {
             setSceneLoad(true)
+            setSubMaskLoaded(true)
         },
         sceneStart: () => {
 
@@ -139,21 +140,20 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
             blackWhiteObjects[1].current.style.WebkitMaskImage = 'url("' +
                 returnImgPath(maskPathList[5][0], true) + '")'
 
-            
             setTimeout(() => {
-                setExtraVolume(audioList.bodyAudio2, 3)
+                setExtraVolume(audioList.bodyAudio2, 4)
             }, 2500);
 
             setTimeout(() => {
                 audioList.bodyAudio2.play()
-                setTimeout(() => {
 
-                    setExtraVolume(audioList.bodyAudio1, 3)
-                    setExtraVolume(audioList.bodyAudio3, 3)
-                    setExtraVolume(audioList.bodyAudio4, 3)
+                setTimeout(() => {
+                    setExtraVolume(audioList.bodyAudio1, 4)
+                    setExtraVolume(audioList.bodyAudio3, 4)
+                    setExtraVolume(audioList.bodyAudio4, 4)
 
                     showIndividualImage()
-                    setSubMaskLoaded(true)
+
                 }, audioList.bodyAudio2.duration * 1000 + 1000);
             }, 3000);
         },
@@ -195,7 +195,7 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
             let isSubAudio = false
 
             if (audioPathList[currentMaskNum].length > 1) {
-                timeDuration += (audioList.bodyAudio3.duration * 1000 - 1000)
+                timeDuration += (audioList.bodyAudio3.duration * 1000 + 500)
                 isSubAudio = true;
             }
 
@@ -226,18 +226,6 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
                         }
                     }, value.t);
                 })
-            }
-
-            if (maskPathList[currentMaskNum].length > 1) {
-                maskPathList[currentMaskNum].map((value, index) => {
-                    setTimeout(() => {
-                        if (index > 0) {
-                            blackWhiteObjects[cIndex].current.style.WebkitMaskImage = 'url("' +
-                                returnImgPath(maskPathList[currentMaskNum][index], true) + '")'
-                        }
-                    }, (bodyAudios[cIndex].duration * 1000 + 1000) / maskPathList[currentMaskNum].length * index);
-                }
-                )
             }
 
             setTimeout(() => {
@@ -308,10 +296,10 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
                                     isSubEven = !isSubEven
 
 
-                                    if(subMaskNum < subMarkInfoList.length - 1)
-                                    subMarkInfoList[subMaskNum + 1].map((value, index) => {
-                                        subMaskRefLists[sIndex][index].current.setMask(returnImgPath(value.p, true))
-                                    })
+                                    if (subMaskNum < subMarkInfoList.length - 1)
+                                        subMarkInfoList[subMaskNum + 1].map((value, index) => {
+                                            subMaskRefLists[sIndex][index].current.setMask(returnImgPath(value.p, true))
+                                        })
 
                                 }
 
@@ -329,7 +317,6 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
                                             break;
                                         }
                                     }
-
                                 }
 
                                 isAudioEven = !isAudioEven
