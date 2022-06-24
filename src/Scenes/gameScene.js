@@ -93,9 +93,10 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, _geo, loadFunc }, ref) => 
 
     const showControlFunc = () => {
 
-        blackWhiteObject.current.style.WebkitMaskImage = 'url("' + prePathUrl() + 'images/question/' + (stepCount + 2) + '/m.png")'
-
         if (stepCount < 7)
+            blackWhiteObject.current.style.WebkitMaskImage = 'url("' + prePathUrl() + 'images/question/' + (stepCount + 2) + '/m.png")'
+
+        if (stepCount < 6)
             aniImageLists[cIndex].map((image, index) => {
                 if (index < 3)
                     image.current.setUrl('question/' + (stepCount + 3) + '/' + (index + 1) + '.png')
@@ -329,11 +330,11 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, _geo, loadFunc }, ref) => 
                                         , cursor: "pointer",
                                     }}>
                                     <BaseImage
-                                        url={'Icon/grey_progress.png'}
+                                        url={'icon/grey_progress.png'}
                                     />
                                     <BaseImage
                                         ref={starRefs[9 - value]}
-                                        url={'Icon/progress.png'}
+                                        url={'icon/progress.png'}
                                         className='hideObject'
                                     />
                                 </div>)
@@ -439,7 +440,7 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, _geo, loadFunc }, ref) => 
                                             top: '-32%'
                                         }}
                                         draggable={false}
-                                        src={prePathUrl() + 'images/Buttons/Answer_Button.svg'}
+                                        src={prePathUrl() + 'images/buttons/answer_button.svg'}
                                     />
                                 </div>
                             </div>
