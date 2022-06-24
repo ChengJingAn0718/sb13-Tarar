@@ -14,8 +14,8 @@ export default function Scene18({ nextFunc, _geo, _baseGeo }) {
     useEffect(() => {
 
 
-        setExtraVolume(audioList.excellentAudio, 4)
-        setExtraVolume(audioList.replayAudio, 3)
+        setExtraVolume(audioList.excellentAudio, 6)
+        setExtraVolume(audioList.replayAudio, 4)
 
         setRepeatAudio(audioList.replayAudio)
 

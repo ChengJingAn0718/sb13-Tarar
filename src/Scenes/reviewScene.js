@@ -291,7 +291,7 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, _geo }, ref) => {
                             width={"100%"}
                             draggable={false}
                             onLoad={loadImage}
-                            src={prePathUrl() + 'images/word/title.png'}
+                            src={prePathUrl() + 'images/bg/title.png'}
                         />
                     </div>
 

@@ -141,16 +141,16 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc, bgLoaded }, ref)
                 returnImgPath(maskPathList[5][0], true) + '")'
 
             setTimeout(() => {
-                setExtraVolume(audioList.bodyAudio2, 4)
+                setExtraVolume(audioList.bodyAudio2, 6)
             }, 2500);
 
             setTimeout(() => {
                 audioList.bodyAudio2.play()
 
                 setTimeout(() => {
-                    setExtraVolume(audioList.bodyAudio1, 4)
-                    setExtraVolume(audioList.bodyAudio3, 4)
-                    setExtraVolume(audioList.bodyAudio4, 4)
+                    setExtraVolume(audioList.bodyAudio1, 6)
+                    setExtraVolume(audioList.bodyAudio3, 6)
+                    setExtraVolume(audioList.bodyAudio4, 6)
 
                     showIndividualImage()
 

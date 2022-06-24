@@ -73,8 +73,13 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
 
     React.useImperativeHandle(ref, () => ({
         continueGame: () => {
+
+
             qAudio = audioList[osIndex + stepCount + doneCount]
             aAudio = audioList[osIndex + stepCount + doneCount + 1]
+
+            setExtraVolume(qAudio, 8)
+            setExtraVolume(aAudio, 8)
 
             setPrimaryAudio(qAudio)
             setRepeatAudio(audioList.commonAudio1)
@@ -94,11 +99,11 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
         },
         startGame: () => {
 
-            for (let i = 0; i < optionList.reduce((a, b) => a + b); i++)
-                setExtraVolume(audioList[osIndex + i], 4)
-
             qAudio = audioList[osIndex]
             aAudio = audioList[osIndex + 1]
+
+            setExtraVolume(qAudio, 8)
+            setExtraVolume(aAudio, 8)
 
             setPrimaryAudio(qAudio)
             setRepeatAudio(audioList.commonAudio1)
@@ -210,6 +215,10 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
                         qAudio = audioList[osIndex + doneCount + stepCount]
                         aAudio = audioList[osIndex + doneCount + stepCount + 1]
 
+
+                        setExtraVolume(aAudio, 8)
+                        setExtraVolume(qAudio, 8)
+
                         timerList[0] = setTimeout(() => {
                             qAudio.play();
                             timerList[1] = setTimeout(() => {
@@ -291,11 +300,14 @@ const OptionScene = React.forwardRef(({ nextFunc, transSignaler, _geo, continueS
 
                 transSignaler(SIGNALLIST.loadSecondPart)  // loadSecond part...
                 aAudio = audioList[osIndex + doneCount + stepCount + 1 + correctNum]
+                setExtraVolume(aAudio, 8)
 
                 timerList[0] = setTimeout(() => {
                     itemRefList[doneCount + correctNum].current.className = 'appear'
                     parentObject.current.style.pointerEvents = ''
+
                     aAudio.play()
+
                     timerList[2] = setTimeout(() => {
                         setPrimaryAudio(aAudio)
                         startRepeatAudio()
