@@ -29,6 +29,8 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc }, ref) => {
 
             loadFunc();
 
+            setExtraVolume(audioList.middleAudio, 6)
+
             setExtraVolume(audioList.successAudio, 2.5)
 
             setExtraVolume(audioList.buzzAudio, 2.5)
@@ -36,7 +38,7 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc }, ref) => {
 
             setExtraVolume(audioList.yeahAudio, 2.5)
             setExtraVolume(audioList.clapAudio, 2.5)
-            
+
 
             timerList[0] = setTimeout(() => {
                 audioList.middleAudio.play().catch(error => { });
@@ -61,7 +63,7 @@ const Scene = React.forwardRef(({ nextFunc, _baseGeo, loadFunc }, ref) => {
     return (
         <div>
             {isSceneLoad
-             &&
+                &&
                 <div ref={parentRef} className="hideObject">
                     < div ref={spakleRef} className="hideObject" style={{
                         position: "fixed",
